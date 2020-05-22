@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>qwq</title>
+    <style>
+        html,
+        body,
+        #viewdiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="./lib/arcgis_js_v415_api/esri/css/main.css">
+    <script src="./lib/arcgis_js_v415_api/init.js"></script>
+</head>
+
+<body>
+    <div id="viewdiv">
+    </div>
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/GeoJSONLayer",
+            "esri/layers/FeatureLayer",
+            "esri/renderers/ClassBreaksRenderer",
+            "esri/symbols/SimpleFillSymbol",
+            "esri/renderers/smartMapping/creators/color",
+            "esri/renderers/smartMapping/symbology/color",
+            "esri/widgets/Legend"
+        ], function(Map, MapView, GeoJSONLayer, FeatureLayer, ClassBreaksRenderer, SimpleFillSymbol, colorRendererCreator, colorSchemes, Legend) {
+            var map = new Map({
+                basemap: "topo-vector"
+            });
+
+            var view = new MapView({
+                container: "viewdiv",
+                map: map,
+                center: [138.00, 36.00],
+                zoom: 6
+            });
+
+            const popup = {
+                title: "{NL_NAME_1}",
+                content: "病例总数：{total}。",
+            };
+
+            var renderer = {
+                type: "class-breaks",
+                field: "total",
+                classBreakInfos: [{
+                    minValue: 0,
+                    maxValue: 0,
+                    symbol: [{
+                        type: "simple-fill",
+                        color: [255, 255, 255, 0.9],
+                        outline: {
+                            width: 1,
+                            color: "gray"
+                        }
+                    }],
+                    label: "0"
+                }, {
+                    minValue: 1,
+                    maxValue: 100,
+                    symbol: [{
+                        type: "simple-fill",
+                        color: [255, 204, 204, 0.9],
+                        outline: {
+                            width: 1,
+                            color: "gray"
+                        }
+                    }],
+                    label: "1 - 100"
+                }, {
+                    minValue: 101,
+                    maxValue: 500,
+                    symbol: [{
+                        type: "simple-fill",
+                        color: [252, 158, 143, 0.9],
+                        outline: {
+                            width: 1,
+                            color: "gray"
+                        }
+                    }],
+                    label: "101 - 500"
+                }, {
+                    minValue: 501,
+                    maxValue: 1000,
+                    symbol: [{
+                        type: "simple-fill",
+                        color: [250, 114, 90, 0.9],
+                        outline: {
+                            width: 1,
+                            color: "gray"
+                        }
+                    }],
+                    label: "501 - 1000"
+                }, {
+                    minValue: 1001,
+                    maxValue: 3000,
+                    symbol: [{
+                        type: "simple-fill",
+                        color: [237, 67, 45, 0.9],
+                        outline: {
+                            width: 1,
+                            color: "gray"
+                        }
+                    }],
+                    label: "1001 - 3000"
+                }, {
+                    minValue: 3001,
+                    maxValue: 100000,
+                    symbol: [{
+                        type: "simple-fill",
+                        color: [219, 0, 0, 0.9],
+                        outline: {
+                            width: 1,
+                            color: "gray"
+                        }
+                    }],
+                    label: "3000+"
+                }]
+            };
+
+            var featureLayer = new FeatureLayer({
+                url: "http://mc.mikuappendmc.online:6080/arcgis/rest/services/jpn/Japan/FeatureServer",
+                popupTemplate: popup,
+            });
+
+            var colorParams = {
+                layer: featureLayer,
+                view: view,
+                field: "total",
+                classificationMethod: "natural-breaks",
+                numClasses: 5,
+                colorScheme: colorSchemes.getSchemeByName({
+                    geometryType: featureLayer.geometryType,
+                    theme: "high-to-low",
+                }),
+                legendOptions: {
+                    title: "日本"
+                }
+            };
+
+
+            colorRendererCreator.createClassBreaksRenderer(colorParams)
+                .then(function(response) {
+                    featureLayer.renderer = response.renderer;
+                });
+
+            var legend = new Legend({
+                view: view,
+                layerInfos: [{
+                    layer: featureLayer,
+                    title: "累积病例数"
+                }]
+            });
+
+            view.ui.add(legend, "bottom-right");
+            /*
+            const geoJSONLayer = new GeoJSONLayer({
+                url: "",
+                popupTemplate: popup,
+                renderer: classified
+            });
+            */
+            map.add(featureLayer);
+            //map.add(geoJSONLayer);
+        });
+    </script>
+</body>
+
+</html>
