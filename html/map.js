@@ -3,8 +3,16 @@ require([
     "esri/views/MapView",
     "esri/layers/FeatureLayer",
     "esri/layers/GeoJSONLayer",
-    "esri/widgets/Legend"
-], function(Map, MapView, FeatureLayer, GeoJSONLayer, Legend) {
+    "esri/widgets/Legend",
+    "esri/widgets/Compass",
+    "esri/widgets/BasemapLayerList",
+    "esri/widgets/LayerList",
+    "esri/widgets/Zoom",
+    "esri/widgets/Fullscreen",
+    "esri/widgets/ScaleBar",
+    "esri/widgets/Search",
+    "esri/widgets/BasemapToggle"
+], function(Map, MapView, FeatureLayer, GeoJSONLayer, Legend, Compass, BasemapLayerList, LayerList, Zoom, Fullscreen, ScaleBar, Search, BasemapToggle) {
 
     //底图
     const mapType = ["topo", "streets", "satellite",
@@ -14,15 +22,17 @@ require([
         "streets-vector", "streets-night-vector", "streets-navigation-vector",
         "topo-vector", "streets-relief-vector"
     ];
+
     const map = new Map({
         basemap: mapType[4]
     });
+
 
     //容器
     var view = new MapView({
         container: "viewdiv",
         map: map,
-        center: [138.00, 36.00],
+        center: [135.00, 35.50],
         zoom: 6
     });
 
@@ -119,20 +129,23 @@ require([
     //弹出菜单
     const epidemicPopup = {
         title: "{NL_NAME_1}",
-        content: "病例总数：{total}。",
+        content: "<b>病例总数：{total}</b><hr/>活动病例：<br/>治愈：<br/>病故：",
     };
 
     //要素图层
     const featureLayer = new FeatureLayer({
         url: "http://mc.mikuappendmc.online:6080/arcgis/rest/services/jpn/Japan/FeatureServer",
+        copyright: "国土地理院",
         renderer: classBreakRenderer,
         popupTemplate: epidemicPopup
     });
+    map.add(featureLayer);
 
     //GeoJson图层
     const geoJSONLayer = new GeoJSONLayer({
         url: "https://services6.arcgis.com/5jNaHNYe2AnnqRnS/arcgis/rest/services/COVID19_JapanData/FeatureServer/0/query?where=%E9%80%9A%E3%81%97%3E0&returnIdsOnly=false&returnCountOnly=false&&f=pgeojson&outFields=*&orderByFields=%E9%80%9A%E3%81%97",
     });
+    //map.add(geoJSONLayer);
 
     //图例
     var legend = new Legend({
@@ -142,10 +155,71 @@ require([
             title: "累积病例数"
         }]
     });
-
     view.ui.add(legend, "bottom-right");
 
-    map.add(featureLayer);
-    //map.add(geoJSONLayer);
+    //指南针
+    var compass = new Compass({
+        view: view
+    });
+    view.ui.add(compass, {
+        position: "top-right",
+        index: 0
+    });
 
+    //缩放
+    view.ui.move("zoom", {
+        position: "top-right",
+        index: 1
+    });
+
+    //全屏
+    fullscreen = new Fullscreen({
+        view: view
+    });
+    view.ui.add(fullscreen, {
+        position: "top-right",
+        index: 2
+    });
+
+    /*
+        var basemapLayerList = new BasemapLayerList({
+            view: view
+        });
+        view.ui.add(basemapLayerList, "top-left");
+
+        var layerList = new LayerList({
+            view: view
+        });
+        view.ui.add(layerList, "top-left");
+    */
+
+    //底图切换
+    var basemapToggle = new BasemapToggle({
+        view: view,
+        nextBasemap: mapType[0]
+    });
+    view.ui.add(basemapToggle, {
+        position: "bottom-left",
+        index: 0
+    });
+
+    //比例线段
+    var scaleBar = new ScaleBar({
+        view: view,
+        style: "line",
+        unit: "metric"
+    });
+    view.ui.add(scaleBar, {
+        position: "bottom-left",
+        index: 1
+    });
+
+    //搜索 
+    const searchWidget = new Search({
+        view: view,
+    });
+    view.ui.add(searchWidget, {
+        position: "top-left",
+        index: 0
+    });
 });
