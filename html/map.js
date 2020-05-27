@@ -129,23 +129,17 @@ require([
     //弹出菜单
     const epidemicPopup = {
         title: "{NL_NAME_1}",
-        content: "<b>病例总数：{total}</b><hr/>活动病例：<br/>治愈：<br/>病故：",
+        content: "<h3>病例总数：{total}</h3><hr/>活动病例：<br/>治愈：<br/>病亡：",
     };
 
     //要素图层
     const featureLayer = new FeatureLayer({
         url: "http://mc.mikuappendmc.online:6080/arcgis/rest/services/jpn/Japan/FeatureServer",
-        copyright: "国土地理院",
+        copyright: "日本国土地理院",
         renderer: classBreakRenderer,
         popupTemplate: epidemicPopup
     });
     map.add(featureLayer);
-
-    //GeoJson图层
-    const geoJSONLayer = new GeoJSONLayer({
-        url: "https://services6.arcgis.com/5jNaHNYe2AnnqRnS/arcgis/rest/services/COVID19_JapanData/FeatureServer/0/query?where=%E9%80%9A%E3%81%97%3E0&returnIdsOnly=false&returnCountOnly=false&&f=pgeojson&outFields=*&orderByFields=%E9%80%9A%E3%81%97",
-    });
-    //map.add(geoJSONLayer);
 
     //图例
     var legend = new Legend({
@@ -186,12 +180,14 @@ require([
             view: view
         });
         view.ui.add(basemapLayerList, "top-left");
-
-        var layerList = new LayerList({
-            view: view
-        });
-        view.ui.add(layerList, "top-left");
-    */
+*/
+    var layerList = new LayerList({
+        view: view
+    });
+    view.ui.add(layerList, {
+        position: "top-left",
+        index: 1
+    });
 
     //底图切换
     var basemapToggle = new BasemapToggle({
