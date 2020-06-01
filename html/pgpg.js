@@ -3,9 +3,7 @@ var conString = "postgres://username:password@loc/db";
 
 var client = new pg.Client(conString);
 
-var tem = 33;
-
-SQLString = 'insert into pet(tem) values (' + tem + ')';
+SQLString = 'SELECT * FROM "public".epidemicinfo WHERE "public".epidemicinfo."CName" = \'Aichi\'';
 
 client.connect(function(error, results) {
     if (error) {
@@ -16,5 +14,10 @@ client.connect(function(error, results) {
     console.log('connection success...\n');
     client.query(SQLString, function(error, results) {
         console.log(error);
+        return results;
     })
+    return results;
 });
+
+
+//ClientConnectionReady Error:getaddrinfo ENOTFOUND public
