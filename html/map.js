@@ -87,7 +87,7 @@ require([
     //渲染器
     const classBreakRenderer = {
         type: "class-breaks",
-        field: "total",
+        field: "患者数",
         legendOptions: {
             title: "日本"
         },
@@ -129,7 +129,7 @@ require([
     //弹出菜单
     const epidemicPopup = {
         title: "{NL_NAME_1}",
-        content: "<h3>病例总数：{total}</h3><hr/>活动病例：<br/>治愈：<br/>病亡：",
+        content: "<h3>日期：{日付}</h3><h3>病例总数：{患者数}</h3><hr/>活动病例：{入院中}<br/>治愈：{退院者}<br/>病亡：{死亡者}",
     };
 
     //要素图层
