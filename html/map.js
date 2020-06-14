@@ -128,8 +128,45 @@ require([
 
     //弹出菜单
     const epidemicPopup = {
-        title: "{NL_NAME_1}",
-        content: "<h3>日期：{日付}</h3><h3>病例总数：{患者数}</h3><hr/>活动病例：{入院中}<br/>治愈：{退院者}<br/>病亡：{死亡者}",
+        title: "<h2>{NL_NAME_1} ({日付})</h2>",
+        dockEnabled: true,
+        content: [{
+                type: "fields",
+                fieldInfos: [{
+                        fieldName: "患者数",
+                        visible: true,
+                        label: "<b>病例总数</b>",
+                    }, {
+                        fieldName: "入院中",
+                        visible: true,
+                        label: "活动病例",
+                    },
+                    {
+                        fieldName: "退院者",
+                        visible: true,
+                        label: "治愈",
+                    },
+                    {
+                        fieldName: "死亡者",
+                        visible: true,
+                        label: "病亡",
+                    }
+                ]
+            },
+            {
+                type: "media",
+                mediaInfos: [{
+                    title: "<h3>人数比例</h3>",
+                    type: "pie-chart",
+                    caption: "山川异域，日月同天",
+                    value: {
+                        fields: ["入院中", "退院者", "死亡者"],
+                        normalizeField: null,
+                        tooltipField: ""
+                    }
+                }]
+            }
+        ]
     };
 
     //要素图层
