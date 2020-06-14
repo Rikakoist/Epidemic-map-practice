@@ -5,26 +5,61 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>COVID-19 日本</title>
+
     <style>
         html,
-        body,
-        #viewdiv {
+        body {
             padding: 0;
             margin: 0;
             height: 100%;
             width: 100%;
         }
     </style>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
     <link rel="stylesheet" href="./lib/arcgis_js_v415_api/esri/css/main.css">
     <script src="./lib/arcgis_js_v415_api/init.js"></script>
-    <script src="./js/map.js">
-    </script>
+    <script src="./js/map.js"></script>
 </head>
 
 <body>
-    <div id="viewdiv">
-    </div>
+    <el-container style="height:100%;">
+        <el-container id="cityApp" style="float:left;max-height: 100%;">
+            <el-aside width="460px">
+                <el-tabs v-model="activeTab" type="border-card" height="100%">
+                    <el-tab-pane name="epidemicChart">
+                        <span slot="label"><i class="el-icon-loading"></i>疫情变化图表</span>
+                    </el-tab-pane>
+                    <el-tab-pane name="queryByCity">
+                        <span slot="label"><i class="el-icon-location"></i>按城市查询</span>
+                        <el-select v-model="query" placeholder="选择查询的城市">
+                            <el-option v-for="item in cityList" :key="item" :label="item" :value="item">
+                            </el-option>
+                        </el-select>
 
+                        <el-table :data="queryResult" stripe>
+                            <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
+                            <el-table-column prop="city" label="城市" width="80"></el-table-column>
+                            <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
+                            <el-table-column prop="inhospital" label="治疗中" width="65"></el-table-column>
+                            <el-table-column prop="cured" label="治愈" width="55"></el-table-column>
+                            <el-table-column prop="died" label="病亡" width="55"></el-table-column>
+                        </el-table>
+                    </el-tab-pane>
+                    <el-tab-pane label="按时间段查询" name="queryByTimeSpan">
+                        <span slot="label"><i class="el-icon-date"></i>按时间段查询</span>
+                    </el-tab-pane>
+                </el-tabs>
+            </el-aside>
+        </el-container>
+
+        <el-main id="viewdiv" style="height:100%">
+        </el-main>
+
+    </el-container>
 </body>
+<script src="./js/cityQuery.js"></script>
 
 </html>

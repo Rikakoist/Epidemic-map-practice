@@ -11,10 +11,11 @@ app.get('/', function(req, res) {
 
 //按照城市名查询结果
 app.get('/covid19CityData/:city', function(req, respond) {
+    respond.setHeader("Access-Control-Allow-Origin", "*");
     pgQuery.queryFunc(req.params.city, 0, sendQueryRes);
 
     function sendQueryRes(result) {
-        respond.send(result);
+        respond.status(200).send(result);
     }
 })
 

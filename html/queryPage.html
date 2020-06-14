@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <title>EpidemicQuery</title>
+</head>
+
+<body>
+    <div id="cityApp">
+        <el-select v-model="query" placeholder="选择查询的城市">
+            <el-option v-for="item in cityList" :key="item" :label="item" :value="item">
+            </el-option>
+        </el-select>
+
+        <el-table :data="queryResult" stripe>
+            <el-table-column prop="daytime" label="日期" width="100"></el-table-column>
+            <el-table-column prop="city" label="城市" width="120"></el-table-column>
+            <el-table-column prop="infected" label="感染数" width="80"></el-table-column>
+            <el-table-column prop="inhospital" label="治疗中" width="80"></el-table-column>
+            <el-table-column prop="cured" label="治愈" width="80"></el-table-column>
+            <el-table-column prop="died" label="病亡" width="80"></el-table-column>
+        </el-table>
+    </div>
+</body>
+<script src="./js/cityQuery.js">
+</script>
+
+</html>

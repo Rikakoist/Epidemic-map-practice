@@ -12,3 +12,4 @@
 /html/node_modules
 /node_modules
 html/js/secret.js
+html/package-lock.json
