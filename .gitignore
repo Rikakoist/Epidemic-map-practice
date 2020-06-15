@@ -13,3 +13,7 @@
 /node_modules
 html/js/secret.js
 html/package-lock.json
+html/js/echarts/echarts.common.js
+html/js/echarts/echarts.js
+html/js/echarts/echarts.simple.js
+/html/js/jQuery

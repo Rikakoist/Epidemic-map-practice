@@ -15,10 +15,15 @@
             width: 100%;
         }
     </style>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <script src="./js/echarts/echarts.common.js"></script>
+    <script src="./js/jQuery/jquery-3.5.1.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/json2csv"></script>
+    <script src="./js/saveCsv.js"></script>
 
     <link rel="stylesheet" href="./lib/arcgis_js_v415_api/esri/css/main.css">
     <script src="./lib/arcgis_js_v415_api/init.js"></script>
@@ -31,14 +36,35 @@
             <el-aside width="460px">
                 <el-tabs v-model="activeTab" type="border-card" height="100%">
                     <el-tab-pane name="epidemicChart">
-                        <span slot="label"><i class="el-icon-loading"></i>疫情变化图表</span>
+                        <span slot="label"><i class="el-icon-info"></i> 疫情变化图表</span>
+                        <div id="linechart" style="height:600px;width:440px">
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane name="queryComp">
+                        <span slot="label"><i class="el-icon-search"></i> 综合查询</span>
+                        <span>城市：<el-select v-model="compCity" placeholder="选择查询的城市">
+                            <el-option v-for="item in cityList" :key="item" :label="item" :value="item">
+                            </el-option>
+                        </el-select></span>
+                        <el-button type="primary" :disabled="btn1" @click="saveData(0)" icon="el-icon-download">保存结果</el-button><br/><br/>
+                        <span>时段：<el-date-picker v-model="compDateSpan" default-value="2020-04-15" value-format="yyyyMMdd" type="daterange" range-seperator="至" start-placeholder="起始日期" end-placeholder="结束日期"></el-date-picker>
+                        </span>
+                        <el-table :data="compQueryResult" stripe>
+                            <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
+                            <el-table-column prop="city" label="城市" width="80"></el-table-column>
+                            <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
+                            <el-table-column prop="inhospital" label="治疗中" width="65"></el-table-column>
+                            <el-table-column prop="cured" label="治愈" width="55"></el-table-column>
+                            <el-table-column prop="died" label="病亡" width="55"></el-table-column>
+                        </el-table>
                     </el-tab-pane>
                     <el-tab-pane name="queryByCity">
-                        <span slot="label"><i class="el-icon-location"></i>按城市查询</span>
+                        <span slot="label"><i class="el-icon-location"></i> 按城市查询</span>
                         <el-select v-model="cityQuery" placeholder="选择查询的城市">
                             <el-option v-for="item in cityList" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
+                        <el-button type="primary" :disabled="btn2" @click="saveData(1)" icon="el-icon-download">保存结果</el-button>
                         <el-table :data="cityQueryResult" stripe>
                             <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
                             <el-table-column prop="city" label="城市" width="80"></el-table-column>
@@ -49,26 +75,10 @@
                         </el-table>
                     </el-tab-pane>
                     <el-tab-pane label="按时间段查询" name="queryByTimeSpan">
-                        <span slot="label"><i class="el-icon-date"></i>按时间段查询</span>
-                        <el-date-picker v-model="queryDateSpan" value-format="yyyyMMdd" type="daterange" range-seperator="至" start-placeholder="起始日期" end-placeholder="结束日期"></el-date-picker>
+                        <span slot="label"><i class="el-icon-date"></i> 按时间段查询</span>
+                        <el-date-picker v-model="queryDateSpan" default-value="2020-04-15" value-format="yyyyMMdd" type="daterange" range-seperator="至" start-placeholder="起始日期" end-placeholder="结束日期"></el-date-picker>
+                        <el-button type="primary" :disabled="btn3" @click="saveData(2)" icon="el-icon-download"></el-button>
                         <el-table :data="dateQueryResult" stripe>
-                            <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
-                            <el-table-column prop="city" label="城市" width="80"></el-table-column>
-                            <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
-                            <el-table-column prop="inhospital" label="治疗中" width="65"></el-table-column>
-                            <el-table-column prop="cured" label="治愈" width="55"></el-table-column>
-                            <el-table-column prop="died" label="病亡" width="55"></el-table-column>
-                        </el-table>
-                    </el-tab-pane>
-                    <el-tab-pane name="queryComp">
-                        <span slot="label"><i class="el-icon-search"></i>综合查询</span>
-                        <span>城市：<el-select v-model="compCity" placeholder="选择查询的城市">
-                            <el-option v-for="item in cityList" :key="item" :label="item" :value="item">
-                            </el-option>
-                        </el-select></span><br/><br/>
-                        <span>时段：<el-date-picker v-model="compDateSpan" value-format="yyyyMMdd" type="daterange" range-seperator="至" start-placeholder="起始日期" end-placeholder="结束日期"></el-date-picker>
-                        </span>
-                        <el-table :data="compQueryResult" stripe>
                             <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
                             <el-table-column prop="city" label="城市" width="80"></el-table-column>
                             <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
@@ -87,5 +97,6 @@
     </el-container>
 </body>
 <script src="./js/cityQuery.js"></script>
+<script src="./js/chartLayout.js"></script>
 
 </html>
