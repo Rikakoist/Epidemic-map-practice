@@ -24,7 +24,7 @@ require([
     ];
 
     const map = new Map({
-        basemap: mapType[4]
+        basemap: mapType[0]
     });
 
 
@@ -229,7 +229,7 @@ require([
     //底图切换
     var basemapToggle = new BasemapToggle({
         view: view,
-        nextBasemap: mapType[0]
+        nextBasemap: mapType[4]
     });
     view.ui.add(basemapToggle, {
         position: "bottom-left",

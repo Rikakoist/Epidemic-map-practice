@@ -2,11 +2,13 @@
 const { Client, Pool } = require('pg');
 const clientInfo = require('./secret');
 
+//获取当前时间
 function getTime() {
     var tm = new Date();
     return ("[" + tm.getFullYear() + "-" + tm.getMonth() + "-" + tm.getDate() + " " + tm.getHours() + ":" + tm.getMinutes() + ":" + tm.getSeconds() + "]")
 }
 
+//查询函数
 function queryFunc(queryValue, method, cbFunc) {
     const client = new Client(clientInfo.getClientInfo());
     var alias = "\"日付\" AS daytime, \"都道府県名\" AS city, \"患者数\" AS infected, \"入院中\" AS inhospital,\"退院者\" AS cured, \"死亡者\" AS died";
@@ -38,7 +40,7 @@ function queryFunc(queryValue, method, cbFunc) {
         if (err) {
             console.log(err.stack)
         } else {
-            console.log(getTime() + " " + SQLString + ", success, returned " + res.rowCount + " record(s).");
+            console.log(getTime() + " Executed \"" + queryValue + "\",method " + method + " success, returned " + res.rowCount + " record(s).");
             cbFunc(res.rows);
             client.end();
         }
@@ -47,5 +49,6 @@ function queryFunc(queryValue, method, cbFunc) {
 
 
 module.exports = {
-    queryFunc
+    queryFunc,
+    getTime
 }

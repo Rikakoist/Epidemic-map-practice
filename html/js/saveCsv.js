@@ -4,6 +4,8 @@ function getTime() {
 }
 
 function saveCsv(data, queryType) {
+    if (!data)
+        return;
     const parser = new json2csv.Parser();
     const csvData = parser.parse(data);
     //console.log(csvData);
