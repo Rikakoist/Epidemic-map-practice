@@ -9,18 +9,29 @@ var cityQueryApp = new Vue({
             "山口県", "香川県", "青森県", "島根県", "岡山県", "長崎県", "宮崎県", "秋田県", "鹿児島県",
             "徳島県", "鳥取県", "岩手県",
         ],
-        query: null,
-        queryDateStart: "",
-        queryDateEnd: "",
-        queryResult: null,
+        cityQuery: null,
+        cityQueryResult: null,
+        queryDateSpan: null,
+        dateQueryResult: null,
+        compCity: null,
+        compDateSpan: null,
+        compQueryResult: null,
+        serverAddr: "http://localhost:8081/",
+    },
+    computed: {
+        compQuery: function() {
+            if (this.compCity && this.compDateSpan) {
+                return this.compCity + "," + this.compDateSpan;
+            }
+        }
     },
     methods: {
-        getResult: function(res) {
-            this.queryResult = JSON.parse(res);
+        getCityResult: function(res) {
+            this.cityQueryResult = JSON.parse(res);
         },
-        getQuery: function(val, cbFunc) {
+        getCityQuery: function(val, cbFunc) {
             var req = new XMLHttpRequest();
-            req.open("GET", "http://localhost:8081/covid19CityData/" + val, true);
+            req.open("GET", this.serverAddr + "covid19CityData/" + val, true);
             req.send();
 
             req.onreadystatechange = function() {
@@ -32,15 +43,65 @@ var cityQueryApp = new Vue({
                 }
             };
         },
+        getDateResult: function(res) {
+            this.dateQueryResult = JSON.parse(res);
+        },
+        getDateQuery: function(val, cbFunc) {
+            var req = new XMLHttpRequest();
+            req.open("GET", this.serverAddr + "covid19DateData/" + val, true);
+            req.send();
+            req.onreadystatechange = function() {
+                if (req.readyState == 4 && req.status == 200) {
+                    //console.log(req);
+                    cbFunc(req.response);
+                } else {
+                    //console.log(req.readyState + ", " + req.status);
+                }
+            };
+        },
+
+        getCompResult: function(res) {
+            this.compQueryResult = JSON.parse(res);
+        },
+        getCompQuery: function(val, cbFunc) {
+            var req = new XMLHttpRequest();
+            req.open("GET", this.serverAddr + "covid19CompData/" + val, true);
+            req.send();
+            req.onreadystatechange = function() {
+                if (req.readyState == 4 && req.status == 200) {
+                    //console.log(req);
+                    cbFunc(req.response);
+                } else {
+                    //console.log(req.readyState + ", " + req.status);
+                }
+            };
+        },
     },
     watch: {
-        query: function(newVal, oldVal) {
+        cityQuery: function(newVal, oldVal) {
             //console.log("old: " + oldVal + ", new: " + newVal);
             if (!newVal) {
                 alert('QWQ查询条件为空');
                 return;
             }
-            this.getQuery(newVal, this.getResult);
-        }
+            this.getCityQuery(newVal, this.getCityResult);
+        },
+        queryDateSpan: function(newVal, oldVal) {
+            //console.log("old: " + oldVal + ", new: " + newVal);
+            //alert("选择的时间段：" + newVal);
+            if (!newVal) {
+                alert('QWQ查询条件为空');
+                return;
+            }
+            this.getDateQuery(newVal, this.getDateResult);
+        },
+        compQuery: function(newVal, oldVal) {
+            //console.log("old: " + oldVal + ", new: " + newVal);
+            if (!newVal) {
+                alert('QWQ查询条件为空');
+                return;
+            }
+            this.getCompQuery(newVal, this.getCompResult);
+        },
     }
 })

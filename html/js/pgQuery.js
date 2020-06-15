@@ -19,7 +19,12 @@ function queryFunc(queryValue, method, cbFunc) {
             }
         case 1:
             {
-                SQLString = "SELECT " + alias + " FROM \"public\".detailbyregion WHERE \"public\".detailbyregion.\"日付\" = '" + queryValue + "'";
+                SQLString = "SELECT " + alias + " FROM \"public\".detailbyregion WHERE \"public\".detailbyregion.\"日付\" >= '" + queryValue[0] + "' AND \"public\".detailbyregion.\"日付\" <= '" + queryValue[1] + "' ORDER BY \"日付\" DESC";
+                break;
+            }
+        case 2:
+            {
+                SQLString = "SELECT " + alias + " FROM \"public\".detailbyregion WHERE \"public\".detailbyregion.\"都道府県名\" = '" + queryValue[0] + "'AND \"public\".detailbyregion.\"日付\" >= '" + queryValue[1] + "' AND \"public\".detailbyregion.\"日付\" <= '" + queryValue[2] + "'ORDER BY \"日付\" DESC";
                 break;
             }
         default:
