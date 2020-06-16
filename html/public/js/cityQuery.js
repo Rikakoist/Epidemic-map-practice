@@ -42,11 +42,13 @@ var cityQueryApp = new Vue({
             req.open("GET", this.serverAddr + "covid19CompData/" + val, true);
             req.send();
             req.onreadystatechange = function() {
-                if (req.readyState == 4 && req.status == 200) {
-                    //console.log(req);
-                    cbFunc(req.response);
-                } else {
-                    //console.log(req.readyState + ", " + req.status);
+                if (req.readyState == 4) {
+                    if (req.status == 200) {
+                        cbFunc(req.response);
+                    } else {
+                        alert('啊偶，cookie失效了~');
+                        location.reload();
+                    }
                 }
             };
         },
@@ -59,11 +61,13 @@ var cityQueryApp = new Vue({
             req.open("GET", this.serverAddr + "covid19CityData/" + val, true);
             req.send();
             req.onreadystatechange = function() {
-                if (req.readyState == 4 && req.status == 200) {
-                    //console.log(req);
-                    cbFunc(req.response);
-                } else {
-                    //console.log(req.readyState + ", " + req.status);
+                if (req.readyState == 4) {
+                    if (req.status == 200) {
+                        cbFunc(req.response);
+                    } else {
+                        alert('啊偶，cookie失效了~');
+                        location.reload();
+                    }
                 }
             };
         },
@@ -76,11 +80,13 @@ var cityQueryApp = new Vue({
             req.open("GET", this.serverAddr + "covid19DateData/" + val, true);
             req.send();
             req.onreadystatechange = function() {
-                if (req.readyState == 4 && req.status == 200) {
-                    //console.log(req);
-                    cbFunc(req.response);
-                } else {
-                    //console.log(req.readyState + ", " + req.status);
+                if (req.readyState == 4) {
+                    if (req.status == 200) {
+                        cbFunc(req.response);
+                    } else {
+                        alert('啊偶，cookie失效了~');
+                        location.reload();
+                    }
                 }
             };
         },

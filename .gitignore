@@ -11,9 +11,9 @@
 /DB
 /html/node_modules
 /node_modules
-html/js/secret.js
 html/package-lock.json
-html/js/echarts/echarts.common.js
-html/js/echarts/echarts.js
-html/js/echarts/echarts.simple.js
 /html/js/jQuery
+/html/secret.js
+/html/public/pic
+/html/public/js/jQuery
+/html/public/js/echarts
