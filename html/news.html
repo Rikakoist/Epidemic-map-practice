@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+    <meta name="author" content="Rikakoist" />
+    <meta name="generator" content="VSCode" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <title>News</title>
+</head>
+
+<body>
+    <el-container id="news">
+        <el-card :body-style="{ padding: '0px';}">
+            <div style="padding: 14px;">
+                <span>好吃的汉堡</span>
+                <div class="bottom clearfix">
+                    <time class="time">{{ currentDate }}</time>
+                    <el-button type="text" class="button">操作按钮</el-button>
+                </div>
+            </div>
+        </el-card>
+    </el-container>
+</body>
+<script>
+</script>
+<style>
+    .time {
+        font-size: 13px;
+        color: #999;
+    }
+    
+    .bottom {
+        margin-top: 13px;
+        line-height: 12px;
+    }
+    
+    .button {
+        padding: 0;
+        float: right;
+    }
+    
+    .image {
+        width: 100%;
+        display: block;
+    }
+    
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+    
+    .clearfix:after {
+        clear: both
+    }
+</style>
+
+</html>

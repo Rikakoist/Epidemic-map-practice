@@ -70,7 +70,7 @@ app.post('/login', function(req, res) {
         //console.log('result: ' + result[0]);
         //console.log('result length: ' + result.length);
 
-        //必须查询到结果，并且结果为传入用户名的sha256
+        //必须查询到结果，并且结果为传入密码的sha256
         if (result.length == 1 && result[0].password == SHA256(str.password).toString()) {
             req.session.username = str.username;
             console.log('Auth success.')
