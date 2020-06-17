@@ -7,10 +7,11 @@
     <meta name="generator" content="VSCode" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style/screenstyle.css" />
-
+    <script type="text/javascript" src="/js/crypto-js-4.0.0/crypto-js.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
     <title>Login</title>
 </head>
 
@@ -20,20 +21,21 @@
     <div class="loopbg" id="bg3"> </div>
     <div class="loopbg" id="bg4"> </div>
     <el-container id="loginForm" v-bind:style="containerStyle">
-        <el-form label-width="65px" label-position="right" v-model="authContent" ref="authContent" :rules="formRules">
+        <el-form label-width="65px" label-position="right" :model="authcontent" :rules="rules" ref="authcontent">
             <div v-bind:style="titleStyle" id="maintitle">请登录</div>
             <el-form-item label="用户名" prop="username">
-                <el-input v-model="authContent.username" placeholder="admin"></el-input>
+                <el-input v-model="authcontent.username" placeholder="admin"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-                <el-input type="password" v-model="authContent.password" placeholder="123456"></el-input>
+                <el-input type="password" v-model="authcontent.password" placeholder="123456"></el-input>
             </el-form-item>
             <el-container v-bind:style="buttonsStyle">
-                <el-button type="primary" @click="submitForm(this.cbFunc)">登录</el-button>
-                <el-button @click="reset">重置</el-button>
+                <el-button type="primary" @click="submitForm('authcontent')">登录</el-button>
+                <el-button @click="reset('authcontent')">重置</el-button>
             </el-container>
         </el-form>
     </el-container>
+
 </body>
 <script src="/js/loginApp.js"></script>
 

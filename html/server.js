@@ -2,21 +2,22 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var pgQuery = require('./pgQuery');
+var SHA256 = require("crypto-js/sha256");
 const secret = require('./secret');
 var app = express();
 
+app.set('trust proxy', true);
 app.set('views', __dirname);
 app.engine('html', require('ejs').__express);
 app.set('view engine', 'html');
 
 //Access-Control-Allow-Origin
 app.all('*', function(req, res, next) {
-    console.log(pgQuery.getTime() + " IP: " + req.ip + ' ' + req.url);
+    console.log(pgQuery.getTime() + " Agent: " + req.header('user-agent') + ' Requested: ' + req.url);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-    //res.header("X-Powered-By", ' 3.2.1')
-    //res.header("Content-Type", "application/json;charset=utf-8");
+    //console.log("headers = " + JSON.stringify(req.headers)); // 包含了各种header，包括x-forwarded-for(如果被代理过的话)
     next();
 });
 
@@ -60,15 +61,25 @@ app.post('/login', function(req, res) {
     });
     req.on("end", function() {
         str = JSON.parse(str);
-        if (str.username == "admin" && str.password == "123456") {
-            console.log("pass");
+        pgQuery.accountValidate(str.username, validation);
+
+    });
+
+    function validation(result) {
+        //console.log('str: ' + str);
+        //console.log('result: ' + result[0]);
+        //console.log('result length: ' + result.length);
+
+        //必须查询到结果，并且结果为传入用户名的sha256
+        if (result.length == 1 && result[0].password == SHA256(str.password).toString()) {
             req.session.username = str.username;
+            console.log('Auth success.')
             res.redirect(302, '/main');
         } else {
-            console.log('Authfail');
+            console.log('Auth failed.');
             res.status(401).send();
         }
-    });
+    }
 });
 
 //按照日期范围查询结果

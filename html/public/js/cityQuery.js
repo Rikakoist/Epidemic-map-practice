@@ -21,7 +21,7 @@ var cityQueryApp = new Vue({
         queryDateSpan: null,
         dateQueryResult: null,
 
-        serverAddr: "http://localhost:8081/",
+        serverAddr: "/",
     },
     //综合查询的计算值
     computed: {
