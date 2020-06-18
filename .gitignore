@@ -3,15 +3,10 @@
 ################################################################################
 
 /.vs
-/Data/official-doc
-/Data/COVID-19-till-0426.xlsx
-/Data/COVID-19.xlsx
 /Epidemic-map-japan
-/html/lib/arcgis_js_v415_api
-/DB
+/Data/deprecated
 /html/node_modules
-/node_modules
-html/package-lock.json
+/html/package-lock.json
 /html/js/jQuery
 /html/secret.js
 /html/public/pic

@@ -82,7 +82,7 @@ app.post('/login', function(req, res) {
     }
 });
 
-//按照日期范围查询结果
+//综合查询
 app.get('/covid19CompData/:data', function(req, res) {
     if (req.session.username) {
         var compRange = req.params.data.split(",");
@@ -91,6 +91,7 @@ app.get('/covid19CompData/:data', function(req, res) {
         pgQuery.queryFunc(queryRange, 2, sendQueryRes);
 
         function sendQueryRes(result) {
+            //console.log(result);
             res.status(200).send(result);
         }
     } else {
