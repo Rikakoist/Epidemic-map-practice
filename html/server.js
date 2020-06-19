@@ -82,47 +82,21 @@ app.post('/login', function(req, res) {
     }
 });
 
-//综合查询
-app.get('/covid19CompData/:data', function(req, res) {
+//查询接口
+app.get('/covid19Data/:data', function(req, res) {
     if (req.session.username) {
-        var compRange = req.params.data.split(",");
-        var queryRange = [compRange[0], compRange[1], compRange[2]];
+        var compRange = req.params.data.split(","); //拆分参数
+        //console.log(compRange + ' ' + compRange.length);
+        //根据参数长度判断调用方法
+        if (compRange.length >= 1 && compRange.length <= 3) {
+            pgQuery.queryFunc(compRange, compRange.length, sendQueryRes);
 
-        pgQuery.queryFunc(queryRange, 2, sendQueryRes);
-
-        function sendQueryRes(result) {
-            //console.log(result);
-            res.status(200).send(result);
-        }
-    } else {
-        res.status(401).send();
-    }
-});
-
-//按照城市名查询结果
-app.get('/covid19CityData/:city', function(req, res) {
-    if (req.session.username) {
-        //res.setHeader("Access-Control-Allow-Origin", "*");
-        pgQuery.queryFunc(req.params.city, 0, sendQueryRes);
-
-        function sendQueryRes(result) {
-            res.status(200).send(result);
-        }
-    } else {
-        res.status(401).send();
-    }
-});
-
-//按照日期范围查询结果
-app.get('/covid19DateData/:date', function(req, res) {
-    if (req.session.username) {
-        var dateRange = req.params.date.split(",");
-        var queryDateRange = [dateRange[0], dateRange[1]]; //只取前两个参数，防止构造字符串
-        //console.log(queryDateRange[0] + "..." + queryDateRange[1]);
-        pgQuery.queryFunc(queryDateRange, 1, sendQueryRes);
-
-        function sendQueryRes(result) {
-            res.status(200).send(result);
+            function sendQueryRes(result) {
+                //console.log(result);
+                res.status(200).send(result);
+            }
+        } else {
+            res.status(400).send('查询参数错误！');
         }
     } else {
         res.status(401).send();

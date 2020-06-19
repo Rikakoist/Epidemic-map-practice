@@ -1,3 +1,4 @@
+//新闻卡组件
 Vue.component('newscard', {
     props: ['newsList'],
     data() {
@@ -54,6 +55,8 @@ Vue.component('newscard', {
         },
     },
 });
+
+
 var cityQueryApp = new Vue({
     el: '#epidemicQueryApp',
     data: {
@@ -76,7 +79,7 @@ var cityQueryApp = new Vue({
         cityQueryResult: null,
         queryDateSpan: null,
         dateQueryResult: null,
-        serverAddr: "/",
+        serverAddr: "/covid19Data/",
     },
 
     //综合查询的计算值
@@ -93,47 +96,17 @@ var cityQueryApp = new Vue({
         getCompResult: function(res) {
             this.compQueryResult = JSON.parse(res);
         },
-        getCompQuery: function(val, cbFunc) {
-            var req = new XMLHttpRequest();
-            req.open("GET", this.serverAddr + "covid19CompData/" + val, true);
-            req.send();
-            req.onreadystatechange = function() {
-                if (req.readyState == 4) {
-                    if (req.status == 200) {
-                        cbFunc(req.response);
-                    } else {
-                        alert('啊偶，cookie失效了~');
-                        location.reload();
-                    }
-                }
-            };
-        },
         //按城市查询
         getCityResult: function(res) {
             this.cityQueryResult = JSON.parse(res);
-        },
-        getCityQuery: function(val, cbFunc) {
-            var req = new XMLHttpRequest();
-            req.open("GET", this.serverAddr + "covid19CityData/" + val, true);
-            req.send();
-            req.onreadystatechange = function() {
-                if (req.readyState == 4) {
-                    if (req.status == 200) {
-                        cbFunc(req.response);
-                    } else {
-                        alert('啊偶，cookie失效了~');
-                        location.reload();
-                    }
-                }
-            };
         },
         //按日期查询
         getDateResult: function(res) {
             this.dateQueryResult = JSON.parse(res);
         },
-        getDateQuery: function(val, cbFunc) {
+        getQuery: function(val, cbFunc) {
             var req = new XMLHttpRequest();
-            req.open("GET", this.serverAddr + "covid19DateData/" + val, true);
+            req.open("GET", this.serverAddr + val, true);
             req.send();
             req.onreadystatechange = function() {
                 if (req.readyState == 4) {
@@ -174,19 +147,19 @@ var cityQueryApp = new Vue({
             if (!newVal) {
                 return;
             }
-            this.getCompQuery(newVal, this.getCompResult);
+            this.getQuery(newVal, this.getCompResult);
         },
         cityQuery: function(newVal, oldVal) {
             if (!newVal) {
                 return;
             }
-            this.getCityQuery(newVal, this.getCityResult);
+            this.getQuery(newVal, this.getCityResult);
         },
         queryDateSpan: function(newVal, oldVal) {
             if (!newVal) {
                 return;
             }
-            this.getDateQuery(newVal, this.getDateResult);
+            this.getQuery(newVal, this.getDateResult);
         },
         //侦听查询结果，设置保存按钮可用性
         compQueryResult: function(newVal, oldVal) {

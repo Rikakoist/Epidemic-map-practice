@@ -12,26 +12,30 @@ function getTime() {
 function queryFunc(queryValue, method, cbFunc) {
     const client = new Client(clientInfo.getClientInfo());
     var alias = "\"日付\" AS daytime, \"都道府県名\" AS city, \"患者数\" AS infected, \"入院中\" AS inhospital,\"退院者\" AS cured, \"死亡者\" AS died";
-    var SQLString
+    var SQLString;
+    var methodContent;
     switch (method) {
-        case 0:
-            {
-                SQLString = "SELECT " + alias + " FROM \"public\".detailbyregion WHERE \"public\".detailbyregion.\"都道府県名\" = '" + queryValue + "' ORDER BY \"日付\" DESC";
-                break;
-            }
         case 1:
             {
-                SQLString = "SELECT " + alias + " FROM \"public\".detailbyregion WHERE \"public\".detailbyregion.\"日付\" >= '" + queryValue[0] + "' AND \"public\".detailbyregion.\"日付\" <= '" + queryValue[1] + "' ORDER BY \"日付\" DESC";
+                SQLString = "SELECT " + alias + " FROM \"public\".detailbyregion WHERE \"public\".detailbyregion.\"都道府県名\" = '" + queryValue + "' ORDER BY \"日付\" DESC";
+                methodContent = 'query by city';
                 break;
             }
         case 2:
             {
+                SQLString = "SELECT " + alias + " FROM \"public\".detailbyregion WHERE \"public\".detailbyregion.\"日付\" >= '" + queryValue[0] + "' AND \"public\".detailbyregion.\"日付\" <= '" + queryValue[1] + "' ORDER BY \"日付\" DESC";
+                methodContent = 'query by date';
+                break;
+            }
+        case 3:
+            {
                 SQLString = "SELECT " + alias + " FROM \"public\".detailbyregion WHERE \"public\".detailbyregion.\"都道府県名\" = '" + queryValue[0] + "'AND \"public\".detailbyregion.\"日付\" >= '" + queryValue[1] + "' AND \"public\".detailbyregion.\"日付\" <= '" + queryValue[2] + "'ORDER BY \"日付\" DESC";
+                methodContent = 'query by city and date';
                 break;
             }
         default:
             {
-                alert('查询方式错误。');
+                cbFunc('');
             }
     }
 
@@ -40,7 +44,7 @@ function queryFunc(queryValue, method, cbFunc) {
         if (err) {
             console.log(err.stack)
         } else {
-            console.log(getTime() + " Executed \"" + queryValue + "\",method " + method + " success, returned " + res.rowCount + " record(s).");
+            console.log(getTime() + " Executed \"" + queryValue + "\", " + methodContent + " success, returned " + res.rowCount + " record(s).");
             cbFunc(res.rows);
             client.end();
         }
