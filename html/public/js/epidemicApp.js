@@ -19,7 +19,7 @@ Vue.component('newscard', {
         '</a>' +
         '</el-card>' +
         '</transition-group>' +
-        '<el-button style="margin-top:15px;" type="primary" v-on:click="getNewsList(getNewsResult)" :icon="ico" :disabled="btn">{{scrollDown}}</el-button>' +
+        '<el-button style="margin-top:15px;" type="primary" v-on:click="getNewsList(getNewsResult)" :icon="ico" v-if="!btn">{{scrollDown}}</el-button>' +
         '</el-container>',
 
     //装载时触发
@@ -86,20 +86,11 @@ Vue.component('newscard', {
     }
 });
 
-//App
+//App，待模块化
 var cityQueryApp = new Vue({
     el: '#epidemicQueryApp',
     data: {
         activeTab: 'epidemicChart', //活动tab
-        //按钮可用性
-        btn1: true,
-        btn2: true,
-        btn3: true,
-        tableLoadTxt: '服务器娘祈祷中...',
-        tableLoadIco: 'el-icon-loading',
-        tableLoad1: false,
-        tableLoad2: false,
-        tableLoad3: false,
         cityList: ["東京都", "大阪府", "神奈川県", "北海道", "埼玉県", "千葉県", "兵庫県", "福岡県",
             "愛知県", "京都府", "石川県", "富山県", "茨城県", "広島県", "岐阜県", "群馬県", "沖縄県",
             "福井県", "滋賀県", "奈良県", "宮城県", "福島県", "新潟県", "高知県", "長野県", "静岡県",
@@ -107,14 +98,37 @@ var cityQueryApp = new Vue({
             "山口県", "香川県", "青森県", "島根県", "岡山県", "長崎県", "宮崎県", "秋田県", "鹿児島県",
             "徳島県", "鳥取県", "岩手県",
         ],
-        //查询们
-        compCity: null,
-        compDateSpan: null,
-        compQueryResult: null,
+
+        pageSizes: [10, 20, 50, 100], //分页大小
+        tableLoadTxt: '服务器娘祈祷中...', //加载表格时的文字
+        tableLoadIco: 'el-icon-loading', //加载表格时的图标
+
+        //综合查询
+        tableLoad1: false, //表格是否在加载
+        btn1: true, //保存按钮是否禁用
+        compCity: null, //查询城市
+        compDateSpan: null, //查询日期范围
+        compQueryResult: [], //查询结果
+        pagesize1: 20, //分页大小
+        currentPage1: 1, //当前页
+
+        //按城市查询
+        tableLoad2: false,
+        btn2: true,
         cityQuery: null,
-        cityQueryResult: null,
+        cityQueryResult: [],
+        pagesize2: 20,
+        currentPage2: 1,
+
+        //按时段查询
+        tableLoad3: false,
+        btn3: true,
         queryDateSpan: null,
-        dateQueryResult: null,
+        dateQueryResult: [],
+        pagesize3: 20,
+        currentPage3: 1,
+
+        newsList: [],
         serverAddr: "/covid19Data/",
     },
 
@@ -131,7 +145,7 @@ var cityQueryApp = new Vue({
         //综合查询
         getCompResult: function(res) {
             this.compQueryResult = JSON.parse(res);
-            this.tableLoad1 = false;
+            this.tableLoad1 = false; //查询后设置表格加载完成
         },
         //按城市查询
         getCityResult: function(res) {
@@ -171,6 +185,25 @@ var cityQueryApp = new Vue({
                 }
             };
         },
+        //控制分页的函数。能不能简写成一个？
+        handleSizeChange1(val) {
+            this.pagesize1 = val;
+        },
+        handleCurrentChange1(val) {
+            this.currentPage1 = val;
+        },
+        handleSizeChange2(val) {
+            this.pagesize2 = val;
+        },
+        handleCurrentChange2(val) {
+            this.currentPage2 = val;
+        },
+        handleSizeChange3(val) {
+            this.pagesize3 = val;
+        },
+        handleCurrentChange3(val) {
+            this.currentPage3 = val;
+        },
         //保存查询结果到csv
         saveData: function(method) {
             switch (method) {
@@ -190,7 +223,7 @@ var cityQueryApp = new Vue({
                         break;
                     }
             }
-        }
+        },
     },
     watch: {
         //监听查询字符串，并调用回调函数向服务端发送请求
@@ -198,7 +231,7 @@ var cityQueryApp = new Vue({
             if (!newVal) {
                 return;
             }
-            this.tableLoad1 = true;
+            this.tableLoad1 = true; //查询前设置表格正在加载
             this.getQuery(newVal, this.getCompResult);
         },
         cityQuery: function(newVal, oldVal) {

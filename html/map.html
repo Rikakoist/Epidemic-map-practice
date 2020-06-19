@@ -57,7 +57,7 @@
                         <el-button type="primary" :disabled="btn1" @click="saveData(0)" icon="el-icon-download">保存结果</el-button><br/><br/>
                         <span>时段：<el-date-picker v-model="compDateSpan" default-value="2020-04-15" value-format="yyyyMMdd" type="daterange" range-seperator="至" start-placeholder="起始日期" end-placeholder="结束日期"></el-date-picker>
                         </span>
-                        <el-table :data="compQueryResult" stripe v-loading="tableLoad1" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
+                        <el-table :data="compQueryResult.slice((currentPage1-1)*pagesize1,currentPage1*pagesize1)" stripe v-loading="tableLoad1" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
                             <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
                             <el-table-column prop="city" label="城市" width="80"></el-table-column>
                             <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
@@ -65,6 +65,7 @@
                             <el-table-column prop="cured" label="治愈" width="55"></el-table-column>
                             <el-table-column prop="died" label="病亡" width="55"></el-table-column>
                         </el-table>
+                        <el-pagination class="queryPages" :current-page="currentPage1" @size-change="handleSizeChange1" @current-change="handleCurrentChange1" :page-sizes="pageSizes" :page-size="pagesize1" layout="total, sizes, prev, pager, next, jumper" :total="compQueryResult.length"></el-pagination>
                     </el-tab-pane>
                     <el-tab-pane name="queryByCity">
                         <span slot="label"><i class="el-icon-location"></i> 按城市查询</span>
@@ -73,7 +74,7 @@
                             </el-option>
                         </el-select>
                         <el-button type="primary" :disabled="btn2" @click="saveData(1)" icon="el-icon-download">保存结果</el-button>
-                        <el-table :data="cityQueryResult" stripe v-loading="tableLoad2" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
+                        <el-table :data="cityQueryResult.slice((currentPage2-1)*pagesize2,currentPage2*pagesize2)" stripe v-loading="tableLoad2" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
                             <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
                             <el-table-column prop="city" label="城市" width="80"></el-table-column>
                             <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
@@ -81,12 +82,13 @@
                             <el-table-column prop="cured" label="治愈" width="55"></el-table-column>
                             <el-table-column prop="died" label="病亡" width="55"></el-table-column>
                         </el-table>
+                        <el-pagination class="queryPages" :current-page="currentPage2" @size-change="handleSizeChange2" @current-change="handleCurrentChange2" :page-sizes="pageSizes" :page-size="pagesize2" layout="total, sizes, prev, pager, next, jumper" :total="cityQueryResult.length"></el-pagination>
                     </el-tab-pane>
                     <el-tab-pane label="按时间段查询" name="queryByTimeSpan">
                         <span slot="label"><i class="el-icon-date"></i> 按时间段查询</span>
                         <el-date-picker v-model="queryDateSpan" default-value="2020-04-15" value-format="yyyyMMdd" type="daterange" range-seperator="至" start-placeholder="起始日期" end-placeholder="结束日期"></el-date-picker>
                         <el-button type="primary" :disabled="btn3" @click="saveData(2)" icon="el-icon-download"></el-button>
-                        <el-table :data="dateQueryResult" stripe v-loading="tableLoad3" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
+                        <el-table :data="dateQueryResult.slice((currentPage3-1)*pagesize3,currentPage3*pagesize3)" stripe v-loading="tableLoad3" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
                             <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
                             <el-table-column prop="city" label="城市" width="80"></el-table-column>
                             <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
@@ -94,6 +96,9 @@
                             <el-table-column prop="cured" label="治愈" width="55"></el-table-column>
                             <el-table-column prop="died" label="病亡" width="55"></el-table-column>
                         </el-table>
+                        <el-pagination class="queryPages" :current-page="currentPage3" @size-change="handleSizeChange3" @current-change="handleCurrentChange3" :page-sizes="pageSizes" :page-size="pagesize3" layout="total, sizes, prev, pager, next, jumper" :total="dateQueryResult.length">
+                        </el-pagination>
+
                     </el-tab-pane>
                 </el-tabs>
             </el-aside>
