@@ -1,3 +1,59 @@
+Vue.component('newscard', {
+    props: ['newsList'],
+    data() {
+        return {
+            scrollDown: '',
+            url: 'https://cors-anywhere.herokuapp.com/' + 'http://c.3g.163.com/nc/article/list/T1467284926140/0-20.html',
+            ico: '',
+            btn: 'true',
+        }
+    },
+    template: '<el-container class="flexContainer" v-loading="btn">' +
+        '<span v-if="btn"><i class="el-icon-loading"></i>{{scrollDown}}</span><el-card v-for="news in newsList" v-bind:key="news.sourceId" v-bind:news="news" class="newsFace">' +
+        '<a class="newsLink" :href="news.url" target="_blank">' +
+        '<span class="newsTitle">{{news.title}}</span><br/>' +
+        '<img :src="news.imgsrc" class="newsImg"/><br/>' +
+        '<span class="newsSource">来源：{{news.source.replace("#","")}}</span><br/>' +
+        '</a>' +
+        '</el-card>' +
+        '<el-button style="margin-top:15px;" type="primary" v-on:click="getNewsList(getNewsResult)" :icon="ico" :disabled="btn">{{scrollDown}}</el-button>' +
+        '</el-container>',
+    //装载时触发
+    mounted() {
+        this.getNewsList(this.getNewsResult);
+    },
+    methods: {
+        //新闻拉取
+        getNewsResult: function(res) {
+            this.newsList = (JSON.parse(res)).T1467284926140;
+            this.btn = false;
+            this.scrollDown = '到底了...';
+            this.ico = 'el-icon-refresh';
+        },
+        getNewsList: function(cbFunc) {
+            this.scrollDown = '刷刷刷...';
+            this.ico = 'el-icon-loading';
+            this.btn = true;
+            document.getElementById('newsAnchor').scrollIntoView({ behavior: 'smooth' });
+            var req = new XMLHttpRequest();
+            req.open("GET", this.url, true);
+            req.setRequestHeader('cache-control', 'no-cache');
+            req.send();
+            req.onreadystatechange = function() {
+                if (req.readyState == 4) {
+                    if (req.status == 200) {
+                        cbFunc(req.response);
+                    } else {
+                        this.btn = false;
+                        this.scrollDown = '加载失败了~';
+                        this.ico = 'el-icon-error';
+                        //location.reload();
+                    }
+                }
+            };
+        },
+    },
+});
 var cityQueryApp = new Vue({
     el: '#epidemicQueryApp',
     data: {
@@ -20,9 +76,9 @@ var cityQueryApp = new Vue({
         cityQueryResult: null,
         queryDateSpan: null,
         dateQueryResult: null,
-
         serverAddr: "/",
     },
+
     //综合查询的计算值
     computed: {
         compQuery: function() {
@@ -112,28 +168,22 @@ var cityQueryApp = new Vue({
         }
     },
     watch: {
+
         //侦听查询字符串，并调用回调函数向服务端发送请求
         compQuery: function(newVal, oldVal) {
-            //console.log("old: " + oldVal + ", new: " + newVal);
             if (!newVal) {
-                //alert('QWQ查询条件为空');
                 return;
             }
             this.getCompQuery(newVal, this.getCompResult);
         },
         cityQuery: function(newVal, oldVal) {
-            //console.log("old: " + oldVal + ", new: " + newVal);
             if (!newVal) {
-                //alert('QWQ查询条件为空');
                 return;
             }
             this.getCityQuery(newVal, this.getCityResult);
         },
         queryDateSpan: function(newVal, oldVal) {
-            //console.log("old: " + oldVal + ", new: " + newVal);
-            //alert("选择的时间段：" + newVal);
             if (!newVal) {
-                //alert('QWQ查询条件为空');
                 return;
             }
             this.getDateQuery(newVal, this.getDateResult);
@@ -148,5 +198,5 @@ var cityQueryApp = new Vue({
         dateQueryResult: function(newVal, oldVal) {
             this.btn3 = newVal ? false : true;
         },
-    }
+    },
 })

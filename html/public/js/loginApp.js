@@ -47,7 +47,7 @@ var loginApp = new Vue({
                 //left: '50%',
                 transform: 'translateX(25%)'
             },
-            serverAddr: '/login'
+            serverAddr: '/login',
         };
     },
     methods: {
@@ -58,10 +58,10 @@ var loginApp = new Vue({
                     req.open("POST", this.serverAddr, true);
                     //console.log(CryptoJS.SHA256(this.authcontent.password).toString());
                     var enc = {
-                        username: this.authcontent.username,
-                        password: CryptoJS.SHA256(this.authcontent.password).toString()
-                    }
-                    console.log(enc);
+                            username: this.authcontent.username,
+                            password: CryptoJS.SHA256(this.authcontent.password).toString()
+                        }
+                        //console.log(enc);
                     req.send(JSON.stringify(enc));
                     req.onreadystatechange = function() {
                         if (req.readyState == 4) {

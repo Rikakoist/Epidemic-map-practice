@@ -177,7 +177,7 @@ require([
         popupTemplate: epidemicPopup
     });
     map.add(featureLayer);
-
+	
     //图例
     var legend = new Legend({
         view: view,

@@ -1,0 +1,37 @@
+.flexContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column !important;
+    height: auto;
+}
+
+.newsFace {
+    margin-top: 15px;
+    width: 430px;
+}
+
+.newsFace:last-child {
+    margin-bottom: 0;
+}
+
+.newsImg {
+    height: 75px;
+    margin: 10px 0px;
+}
+
+.newsLink {
+    text-decoration: none;
+    color: black;
+}
+
+.newsTitle {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.newsSource {
+    font-size: 10px;
+    color: gray;
+    float: right;
+}

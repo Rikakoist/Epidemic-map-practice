@@ -8,13 +8,14 @@
 
     <style>
         html,
-        body {
+        .bd {
             padding: 0;
             margin: 0;
             height: 100%;
             width: 100%;
         }
     </style>
+    <link rel="stylesheet" href="/style/newsStyle.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script type="text/javascript" src="https://unpkg.com/element-ui/lib/index.js"></script>
@@ -30,15 +31,21 @@
     <script type="text/javascript" src="/js/map.js"></script>
 </head>
 
-<body>
+<body class="bd">
     <el-container style="height:100%;">
         <el-container id="epidemicQueryApp" style="float:left;max-height: 100%;">
-            <el-aside width="460px">
+            <el-aside width="480px">
+                <span id="newsAnchor"></span>
                 <el-tabs v-model="activeTab" type="border-card" height="100%">
                     <el-tab-pane name="epidemicChart">
                         <span slot="label"><i class="el-icon-info"></i> 疫情变化图表</span>
-                        <div id="linechart" style="height:600px;width:440px">
+                        <div id="linechart" style="height:500px;width:440px">
                         </div>
+                        <el-container id="news">
+                            <el-container>
+                                <newscard></newscard>
+                            </el-container>
+                        </el-container>
                     </el-tab-pane>
                     <el-tab-pane name="queryComp">
                         <span slot="label"><i class="el-icon-search"></i> 综合查询</span>
@@ -96,7 +103,7 @@
 
     </el-container>
 </body>
-<script src="./js/cityQuery.js"></script>
-<script src="./js/chartLayout.js"></script>
+<script src="/js/epidemicApp.js"></script>
+<script src="/js/chartLayout.js"></script>
 
 </html>

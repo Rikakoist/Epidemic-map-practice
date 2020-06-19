@@ -129,6 +129,10 @@ app.get('/covid19DateData/:date', function(req, res) {
     }
 });
 
+app.get('/news', function(req, res) {
+
+});
+
 //启动server
 var server = app.listen(8081, function() {
     var host = server.address().address;
