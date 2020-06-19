@@ -17,6 +17,7 @@
     </style>
     <link rel="stylesheet" href="/style/newsStyle.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="/js/Velocity/velocity.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script type="text/javascript" src="https://unpkg.com/element-ui/lib/index.js"></script>
 
@@ -56,7 +57,7 @@
                         <el-button type="primary" :disabled="btn1" @click="saveData(0)" icon="el-icon-download">保存结果</el-button><br/><br/>
                         <span>时段：<el-date-picker v-model="compDateSpan" default-value="2020-04-15" value-format="yyyyMMdd" type="daterange" range-seperator="至" start-placeholder="起始日期" end-placeholder="结束日期"></el-date-picker>
                         </span>
-                        <el-table :data="compQueryResult" stripe>
+                        <el-table :data="compQueryResult" stripe v-loading="tableLoad1" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
                             <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
                             <el-table-column prop="city" label="城市" width="80"></el-table-column>
                             <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
@@ -72,7 +73,7 @@
                             </el-option>
                         </el-select>
                         <el-button type="primary" :disabled="btn2" @click="saveData(1)" icon="el-icon-download">保存结果</el-button>
-                        <el-table :data="cityQueryResult" stripe>
+                        <el-table :data="cityQueryResult" stripe v-loading="tableLoad2" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
                             <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
                             <el-table-column prop="city" label="城市" width="80"></el-table-column>
                             <el-table-column prop="infected" label="感染数" width="65"></el-table-column>
@@ -85,7 +86,7 @@
                         <span slot="label"><i class="el-icon-date"></i> 按时间段查询</span>
                         <el-date-picker v-model="queryDateSpan" default-value="2020-04-15" value-format="yyyyMMdd" type="daterange" range-seperator="至" start-placeholder="起始日期" end-placeholder="结束日期"></el-date-picker>
                         <el-button type="primary" :disabled="btn3" @click="saveData(2)" icon="el-icon-download"></el-button>
-                        <el-table :data="dateQueryResult" stripe>
+                        <el-table :data="dateQueryResult" stripe v-loading="tableLoad3" :element-loading-text="tableLoadTxt" element-loading-spinner="tableLoadIco">
                             <el-table-column prop="daytime" label="日期" width="90"></el-table-column>
                             <el-table-column prop="city" label="城市" width="80"></el-table-column>
                             <el-table-column prop="infected" label="感染数" width="65"></el-table-column>

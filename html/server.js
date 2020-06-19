@@ -2,8 +2,9 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var pgQuery = require('./pgQuery');
-var SHA256 = require("crypto-js/sha256");
 const secret = require('./secret');
+var SHA256 = require("crypto-js/sha256");
+
 var app = express();
 
 app.set('trust proxy', true);
@@ -11,7 +12,7 @@ app.set('views', __dirname);
 app.engine('html', require('ejs').__express);
 app.set('view engine', 'html');
 
-//Access-Control-Allow-Origin
+//跨域问题
 app.all('*', function(req, res, next) {
     console.log(pgQuery.getTime() + " Agent: " + req.header('user-agent') + ' Requested: ' + req.url);
     res.header("Access-Control-Allow-Origin", "*");
@@ -21,6 +22,7 @@ app.all('*', function(req, res, next) {
     next();
 });
 
+//cookie和session
 app.use(cookieParser(secret.getSessionSecret()));
 app.use(session({
     secret: secret.getSessionSecret(),
@@ -31,13 +33,15 @@ app.use(session({
     },
 }))
 
-app.use(express.static('public'));
+app.use(express.static('public')); //静态访问路径
 
 //登录页面
 app.get('/', function(req, res) {
     if (req.session.username) {
+        //验证通过，重定向到疫情地图
         res.redirect(302, '/main');
     } else {
+        //加载登陆页面
         res.type('html');
         res.render(__dirname + '\\login.html');
     }
@@ -46,9 +50,11 @@ app.get('/', function(req, res) {
 //地图页面
 app.get('/main', function(req, res) {
     if (req.session.username) {
+        //验证通过，返回疫情地图文档
         res.type('html');
         res.render(__dirname + '\\map.html');
     } else {
+        //重定向登录
         res.redirect(302, '/');
     }
 });
@@ -62,9 +68,9 @@ app.post('/login', function(req, res) {
     req.on("end", function() {
         str = JSON.parse(str);
         pgQuery.accountValidate(str.username, validation);
-
     });
 
+    //验证函数
     function validation(result) {
         //console.log('str: ' + str);
         //console.log('result: ' + result[0]);
@@ -96,10 +102,10 @@ app.get('/covid19Data/:data', function(req, res) {
                 res.status(200).send(result);
             }
         } else {
-            res.status(400).send('查询参数错误！');
+            res.status(400).send('查询参数错误哦~');
         }
     } else {
-        res.status(401).send();
+        res.status(401).send('查询要登录哦~');
     }
 });
 
