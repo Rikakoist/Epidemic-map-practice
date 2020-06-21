@@ -41,8 +41,8 @@
                 <el-tabs v-model="activeTab" type="border-card" height="100%">
                     <el-tab-pane name="epidemicChart">
                         <span slot="label"><i class="el-icon-info"></i> 疫情变化图表</span>
-                        <div id="linechart" style="height:500px;width:440px">
-                        </div>
+                        <el-card id="linechart" style="height:500px;width:430px">
+                        </el-card>
                         <el-container id="news">
                             <el-container>
                                 <newscard></newscard>
